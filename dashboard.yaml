@@ -1,0 +1,43 @@
+# Basis-Dashboard für alle unterstützten i-soft-Geräte.
+# Ersetze überall judo_isoft_pro_192_168_1_50 durch den tatsächlichen Entity-Präfix.
+# Beispiel bei Port 8080: judo_isoft_pro_192_168_1_50_p8080.
+# Bereits vorhandene Entitäten können andere IDs haben: im Gerätebildschirm prüfen.
+views:
+  - title: JUDO i-soft
+    path: judo-isoft
+    icon: mdi:water
+    cards:
+      - type: entities
+        title: Anlage
+        show_header_toggle: false
+        entities:
+          - sensor.judo_isoft_pro_192_168_1_50_geratestatus
+          - sensor.judo_isoft_pro_192_168_1_50_geraetetyp
+          - sensor.judo_isoft_pro_192_168_1_50_device_id
+          - sensor.judo_isoft_pro_192_168_1_50_software_version
+          - sensor.judo_isoft_pro_192_168_1_50_betriebsstunden
+      - type: entities
+        title: Wasser und Salz
+        show_header_toggle: false
+        entities:
+          - sensor.judo_isoft_pro_192_168_1_50_gesamtwassermenge
+          - sensor.judo_isoft_pro_192_168_1_50_weichwassermenge
+          - sensor.judo_isoft_pro_192_168_1_50_salzgewicht
+          - sensor.judo_isoft_pro_192_168_1_50_salzreichweite
+          - sensor.judo_isoft_pro_192_168_1_50_wunschwasserharte
+      - type: entities
+        title: Einstellungen und Aktionen
+        show_header_toggle: false
+        entities:
+          - select.judo_isoft_pro_192_168_1_50_harteeinheit
+          - number.judo_isoft_pro_192_168_1_50_wunschwasserharte
+          - number.judo_isoft_pro_192_168_1_50_salzmangel_warnschwelle
+          - button.judo_isoft_pro_192_168_1_50_regeneration_starten
+          - button.judo_isoft_pro_192_168_1_50_leckageschutz_offnen
+          - button.judo_isoft_pro_192_168_1_50_leckageschutz_schliessen
+      - type: history-graph
+        title: Wasserverbrauch
+        hours_to_show: 48
+        entities:
+          - sensor.judo_isoft_pro_192_168_1_50_gesamtwassermenge
+          - sensor.judo_isoft_pro_192_168_1_50_weichwassermenge
