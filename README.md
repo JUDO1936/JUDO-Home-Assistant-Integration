@@ -19,9 +19,8 @@ Der Domain-/Ordnername `judo_isoft_pro` bleibt aus Kompatibilitätsgründen erha
 | i-soft PRO XL 70 | 6E | ja* | nein | Schutz schließen / öffnen |
 | i-soft PRO XL 140 | 69 | ja* | nein | Schutz schließen / öffnen |
 
-* Die Unterlage nennt für Kommando 69 eine Steuerungssoftware > 1.5.31.
-Bei älterer Firmware bleiben diese Sensoren nicht verfügbar; die Basiswerte
-funktionieren unabhängig davon. Unbekannte Gerätetypen werden abgelehnt.
+Bei älterer Firmware kann es sein das, dass Kommando 69 und Sensoren nicht verfügbar;
+die Basiswerte funktionieren unabhängig davon. Unbekannte Gerätetypen werden abgelehnt.
 Andere Produktfamilien wie SOFTwell, ZEWA oder i-dos sind nicht enthalten.
 
 ## Installation / bestehende Integration aktualisieren
