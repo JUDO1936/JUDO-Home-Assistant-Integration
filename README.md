@@ -7,16 +7,11 @@ lokale REST-Schnittstelle in Home Assistant einbinden. Wasser- und Salzdaten
 werden regelmäßig abgefragt. Je nach Modell können außerdem Einstellungen
 geändert und Aktionen wie Regeneration, Szenen oder Leckageschutz ausgeführt werden.
 
-Die Integration basiert auf der bereitgestellten PRO-Integration und der
-Dokumentation `RESTAPI_Kommandos.pdf`. Sie verwendet keine Cloud-Verbindung:
+Die Integration basiert auf der Dokumentation `RESTAPI_Kommandos.pdf`.
+Sie verwendet keine Cloud-Verbindung:
 Home Assistant kommuniziert direkt mit der IP-Adresse der Anlage.
 
 **Technischer Integrationsname:** `judo_home_assistant_integration`
-
-> Diese Anleitung gilt für Version 4.0.0 mit dem neuen Ordnernamen.
-> Versionen 3.x verwendeten noch `judo_isoft_pro`. Beim Wechsel auf 4.0.0
-> müssen Geräte neu eingerichtet und Dashboard-/Automationsreferenzen angepasst
-> werden. Ein bloßes Umbenennen des alten Ordners reicht nicht.
 
 ## Inhalt
 
@@ -49,14 +44,11 @@ manuelle Auswahl eines PRO-Profils für ein anderes Gerät.
 | i-soft K | `43`, `54` | nein | nein | Alarm setzen / zurücksetzen |
 | i-soft SAFE+ | `33`, `57` | nein | nein | Schutz schließen / öffnen |
 | i-soft K SAFE+ | `42`, `67` | nein | nein | Schutz schließen / öffnen |
-| i-soft PRO | `58`, `4B` | ja, firmwareabhängig | ja | Schutz schließen / öffnen |
-| i-soft PRO L | `4C` | ja, firmwareabhängig | ja | Schutz schließen / öffnen |
-| i-soft PRO XL 70 | `6E` | ja, firmwareabhängig | nein | Schutz schließen / öffnen |
-| i-soft PRO XL 140 | `69` | ja, firmwareabhängig | nein | Schutz schließen / öffnen |
+| i-soft PRO | `58`, `4B` | ab SW: 2.5.45 | ja | Schutz schließen / öffnen |
+| i-soft PRO L | `4C` | ab SW: 2.5.45 | ja | Schutz schließen / öffnen |
+| i-soft PRO XL 70 | `6E` | ab SW: 2.5.45 | nein | Schutz schließen / öffnen |
+| i-soft PRO XL 140 | `69` | ab SW: 2.5.45 | nein | Schutz schließen / öffnen |
 
-Die API-Unterlage nennt für Kommando `69` eine Steuerungssoftware **größer als
-1.5.31**. Bei älterer oder abweichender Firmware können diese Live-Sensoren
-nicht verfügbar sein. Die übrigen Basiswerte werden separat abgefragt.
 
 Unbekannte Gerätetypen werden bei der Einrichtung abgelehnt. Andere Familien,
 z. B. SOFTwell, ZEWA, i-dos oder i-fill, sind in dieser Version nicht enthalten.
@@ -237,8 +229,6 @@ Eine Änderung des Anzeigenamens benennt vorhandene Entity-IDs nicht automatisch
 | Wunschwasserhärte | Eingestellte Härteeinheit | Gewählter Sollwert; keine separate Rohwasserhärtemessung |
 | Software-Version | Versionsangabe | Steuerungssoftware des Geräts |
 | Gerätetyp | Modellname | Aus dem Gerätetypcode erkannt |
-| Device ID | Zahl | Gerätenummer aus Kommando `06` |
-| Betriebsstunden | Stunden | Umrechnung aus Minuten, Stunden und Tagen des Geräts |
 | Gerätestatus | Online / Offline | Aus dem Zeitpunkt der letzten erfolgreichen Antwort abgeleitet |
 
 Beispiel: Ein Gerätewert von `1057516` Litern wird als `1057,516 m³`
@@ -256,8 +246,7 @@ Gewichts- oder Verbrauchsmessung durch Home Assistant.
 | Regeneration starten | Sendet den dokumentierten Startbefehl |
 | Leckageaktion | Je nach Modell Alarm oder Absperrschutz |
 
-Die Integration bietet bei Standardmodellen °dH, °eH, °fH, gpg, ppm, mmol und
-mval an. PRO XL bietet nur °dH, °fH, ppm und mmol an.
+Die Integration bietet bei Standardmodellen °dH,°fH, ppm, mmol 
 
 Die Warnschwelle in Tagen ist eine Geräteeinstellung. Eine zusätzliche
 Home-Assistant-Meldung wird dadurch nicht automatisch eingerichtet; dafür kann
@@ -360,7 +349,7 @@ Die YAML-Vorlagen müssen passend zum Modell und den tatsächlichen IDs gewählt
 | Datei | Geeignet für | Inhalt |
 | --- | --- | --- |
 | `dashboard.yaml` | Alle unterstützten Modelle | Basiswerte, gemeinsame Einstellungen und Aktionen |
-| `dashboard-szenen.yaml` | PRO / PRO L | Ursprüngliches PRO-Layout mit Live-Daten, Szenen und Urlaub; IDs an neue Domain angepasst |
+| `dashboard-pro.yaml` | PRO / PRO L | Ursprüngliches PRO-Layout mit Live-Daten, Szenen und Urlaub; IDs an neue Domain angepasst |
 
 Die Basisvorlage kann auch für PRO und PRO XL verwendet werden. Für XL können
 Live-Karten ergänzt werden, aber nicht die Szenen-/Urlaubskarten der PRO-Vorlage.
