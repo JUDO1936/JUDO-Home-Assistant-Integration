@@ -66,6 +66,9 @@ Ein PRO XL erhält Live-Daten, aber ebenfalls keine PRO-Szenenauswahl.
 - Eine Netzwerkverbindung von Home Assistant zur Anlage. Bei getrennten
   Netzwerksegmenten muss der konfigurierte Port zwischen beiden erreichbar sein.
 
+Alle Geräte außer die von der i-soft PRO Familie benötigten ein Connectivity Modul. 
+Nur mit diesem sind die Geräte überhaupt erst Internet fähig.
+
 Der Client verwendet HTTP und HTTP-Basic-Authentifizierung. Eine Einrichtung
 mit HTTPS, Zertifikaten oder einem frei wählbaren URL-Pfad ist nicht enthalten.
 Im Feld „IP-Adresse / Hostname“ nur die Adresse eintragen, z. B. `192.168.1.50`:
