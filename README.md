@@ -44,10 +44,10 @@ manuelle Auswahl eines PRO-Profils für ein anderes Gerät.
 | i-soft K | `43`, `54` | nein | nein | Alarm setzen / zurücksetzen |
 | i-soft SAFE+ | `33`, `57` | nein | nein | Schutz schließen / öffnen |
 | i-soft K SAFE+ | `42`, `67` | nein | nein | Schutz schließen / öffnen |
-| i-soft PRO | `58`, `4B` | ab SW: 2.5.45 | ja | Schutz schließen / öffnen |
-| i-soft PRO L | `4C` | ab SW: 2.5.45 | ja | Schutz schließen / öffnen |
-| i-soft PRO XL 70 | `6E` | ab SW: 2.5.45 | nein | Schutz schließen / öffnen |
-| i-soft PRO XL 140 | `69` | ab SW: 2.5.45 | nein | Schutz schließen / öffnen |
+| i-soft PRO | `58`, `4B` | ab SW: 2.5.48 | ja | Schutz schließen / öffnen |
+| i-soft PRO L | `4C` | ab SW: 2.5.48 | ja | Schutz schließen / öffnen |
+| i-soft PRO XL 70 | `6E` | ab SW: 2.5.48 | nein | Schutz schließen / öffnen |
+| i-soft PRO XL 140 | `69` | ab SW: 2.5.48 | nein | Schutz schließen / öffnen |
 
 
 Unbekannte Gerätetypen werden bei der Einrichtung abgelehnt. Andere Familien,
