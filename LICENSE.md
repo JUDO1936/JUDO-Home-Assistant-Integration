@@ -10,18 +10,6 @@ Die Bezeichnungen JUDO und i-soft beschreiben den Gerätehersteller und die
 Gerätekompatibilität. Sie stellen keine Behauptung einer Firmenzugehörigkeit
 oder offiziellen Freigabe dar.
 
-## Lizenz der enthaltenen Originalbestandteile
-
-Die Ausgangsversion enthält Originalbestandteile, deren Urheberrecht bei JUDO
-Wasseraufbereitung GmbH liegt. Die nachfolgenden Bedingungen gelten für diese
-Bestandteile und werden durch Nutzeränderungen nicht aufgehoben oder
-übertragen. Dieser Hinweis beansprucht keine Rechte an den Originalbestandteilen.
-
-NICHT-KOMMERZIELLE SOFTWARELIZENZ
-
-Copyright © 2026 JUDO Wasseraufbereitung GmbH (Originalbestandteile)
-
-Alle Rechte vorbehalten.
 
 1. ERLAUBTE NUTZUNG
 
