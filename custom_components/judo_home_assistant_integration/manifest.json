@@ -1,0 +1,10 @@
+{
+  "domain": "judo_home_assistant_integration",
+  "name": "JUDO Home Assistant Integration",
+  "config_flow": true,
+  "documentation": "https://github.com/JUDO1936/JUDO-Home-Assistant-Integration",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "requirements": [],
+  "version": "4.0.6"
+}

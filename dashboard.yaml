@@ -1,0 +1,50 @@
+# Basis-Dashboard für alle unterstützten i-soft-Geräte.
+# VOR DEM IMPORT ANPASSEN:
+# 1. Home Assistant: Einstellungen > Geräte & Dienste > JUDO > dein Gerät > Entitäten.
+# 2. Dort die vollständigen Entity-IDs der benötigten Entitäten kopieren.
+# 3. Unten den Beispielpräfix judo_home_assistant_integration_192_168_1_50 ersetzen.
+# Die vorgeschlagenen IDs basieren auf IP-Adresse/Hostname und Port, nicht auf dem
+# frei gewählten Gerätenamen. Bei abweichenden oder manuell umbenannten IDs jede
+# Entity-ID einzeln durch die in Home Assistant angezeigte ID ersetzen.
+# Beispiel bei Port 8080: judo_home_assistant_integration_192_168_1_50_p8080.
+# Passe außerdem title und path an den Gerätenamen an, damit du die Anlage
+# im Dashboard wiedererkennst.
+views:
+  - title: i-soft Beispielgerät
+    path: judo-isoft-beispiel
+    icon: mdi:water
+    cards:
+      - type: entities
+        title: Anlage
+        show_header_toggle: false
+        entities:
+          - sensor.judo_home_assistant_integration_192_168_1_50_geratestatus
+          - sensor.judo_home_assistant_integration_192_168_1_50_geraetetyp
+          - sensor.judo_home_assistant_integration_192_168_1_50_device_id
+          - sensor.judo_home_assistant_integration_192_168_1_50_software_version
+          - sensor.judo_home_assistant_integration_192_168_1_50_betriebsstunden
+      - type: entities
+        title: Wasser und Salz
+        show_header_toggle: false
+        entities:
+          - sensor.judo_home_assistant_integration_192_168_1_50_gesamtwassermenge
+          - sensor.judo_home_assistant_integration_192_168_1_50_weichwassermenge
+          - sensor.judo_home_assistant_integration_192_168_1_50_salzgewicht
+          - sensor.judo_home_assistant_integration_192_168_1_50_salzreichweite
+          - sensor.judo_home_assistant_integration_192_168_1_50_wunschwasserharte
+      - type: entities
+        title: Einstellungen und Aktionen
+        show_header_toggle: false
+        entities:
+          - select.judo_home_assistant_integration_192_168_1_50_harteeinheit
+          - number.judo_home_assistant_integration_192_168_1_50_wunschwasserharte
+          - number.judo_home_assistant_integration_192_168_1_50_salzmangel_warnschwelle
+          - button.judo_home_assistant_integration_192_168_1_50_regeneration_starten
+          - button.judo_home_assistant_integration_192_168_1_50_leckageschutz_offnen
+          - button.judo_home_assistant_integration_192_168_1_50_leckageschutz_schliessen
+      - type: history-graph
+        title: Wasserverbrauch
+        hours_to_show: 48
+        entities:
+          - sensor.judo_home_assistant_integration_192_168_1_50_gesamtwassermenge
+          - sensor.judo_home_assistant_integration_192_168_1_50_weichwassermenge
