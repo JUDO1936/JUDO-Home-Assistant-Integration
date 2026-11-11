@@ -1,0 +1,210 @@
+# Gerätename: i-soft PRO Keller
+# Angenommenes Entitätspräfix: judo_i_soft_pro_keller
+# Bitte mit den tatsächlichen Entitäts-IDs in Home Assistant abgleichen.
+views:
+- title: i-soft PRO Keller
+  path: beispiel_i_soft_pro_keller
+  icon: mdi:water-softener
+  type: sections
+  max_columns: 3
+  dense_section_placement: false
+  top_margin: false
+  sections:
+  - type: grid
+    cards:
+    - type: heading
+      heading: Anlage & Infodaten
+      heading_style: title
+      icon: mdi:information-outline
+    - type: entities
+      show_header_toggle: false
+      entities:
+      - entity: sensor.judo_i_soft_pro_keller_geratestatus
+        name: Verbindungsstatus
+        icon: mdi:lan-connect
+      - entity: sensor.judo_i_soft_pro_keller_geratetyp
+        name: Modelltyp
+        icon: mdi:chip
+      - entity: sensor.judo_i_soft_pro_keller_software_version
+        name: Firmware-Version
+        icon: mdi:numeric
+    - type: heading
+      heading: Verlauf (7-Tage)
+      heading_style: title
+      icon: mdi:chart-line
+    - type: history-graph
+      entities:
+      - entity: sensor.judo_i_soft_pro_keller_gesamtwassermenge
+        name: Gesamtwasser
+      - entity: sensor.judo_i_soft_pro_keller_weichwassermenge
+        name: Weichwasser
+      - entity: sensor.judo_i_soft_pro_keller_aktueller_wasserdurchfluss
+        name: Durchfluss
+      - entity: sensor.judo_i_soft_pro_keller_wassertemperatur
+        name: Temperatur
+      hours_to_show: 168
+      show_names: true
+      logarithmic_scale: false
+      expand_legend: false
+  - type: grid
+    cards:
+    - type: heading
+      heading: Wasser & Verbrauch
+      heading_style: title
+      icon: mdi:water
+    - type: entities
+      show_header_toggle: false
+      entities:
+      - entity: sensor.judo_i_soft_pro_keller_gesamtwassermenge
+        name: Gesamtwassermenge
+        icon: mdi:water
+      - entity: sensor.judo_i_soft_pro_keller_weichwassermenge
+        name: Weichwassermenge
+        icon: mdi:water-outline
+      - type: section
+      - entity: sensor.judo_i_soft_pro_keller_aktueller_wasserdurchfluss
+        name: Aktueller Durchfluss
+        icon: mdi:water-pump
+      - entity: sensor.judo_i_soft_pro_keller_wassertemperatur
+        name: Wassertemperatur
+        icon: mdi:thermometer-water
+    - type: heading
+      heading: Leckageschutz & Ventile
+      heading_style: title
+      icon: mdi:shield-water
+    - type: entities
+      show_header_toggle: false
+      entities:
+      - entity: sensor.judo_i_soft_pro_keller_globaler_leckageschutz
+        name: Leckageschutz-Status
+        icon: mdi:shield-check
+      - entity: sensor.judo_i_soft_pro_keller_leckageschutz_position_abgeleitet
+        name: Leckageschutz Ventil
+        icon: mdi:valve
+      - entity: sensor.judo_i_soft_pro_keller_leckagegrund
+        name: Leckagegrund
+        icon: mdi:alert-decagram-outline
+      - type: section
+      - entity: select.judo_i_soft_pro_keller_max_entnahmedauer
+        name: Max. Entnahmedauer
+        icon: mdi:timer-cog
+      - entity: number.judo_i_soft_pro_keller_max_entnahmemenge
+        name: Max. Entnahmemenge
+        icon: mdi:water-minus
+      - entity: number.judo_i_soft_pro_keller_max_volumenstrom
+        name: Max. Volumenstrom
+        icon: mdi:speedometer
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: tile
+        entity: button.judo_i_soft_pro_keller_leckageschutz_schliessen
+        name: Leckageschutz schließen
+        icon: mdi:valve-closed
+        hide_state: true
+        features:
+        - type: button
+          action_name: Schließen
+      - type: tile
+        entity: button.judo_i_soft_pro_keller_leckageschutz_offnen
+        name: Leckageschutz öffnen
+        icon: mdi:valve-open
+        hide_state: true
+        features:
+        - type: button
+          action_name: Öffnen
+    - type: heading
+      heading: Salzvorrat & Warnung
+      heading_style: title
+      icon: mdi:salt-shaker
+    - type: entities
+      show_header_toggle: false
+      entities:
+      - entity: sensor.judo_i_soft_pro_keller_salzgewicht
+        name: Aktuelles Salzgewicht
+        icon: mdi:sack
+      - entity: sensor.judo_i_soft_pro_keller_salzreichweite
+        name: Verbleibende Reichweite
+        icon: mdi:calendar-clock
+      - type: section
+      - entity: number.judo_i_soft_pro_keller_salzmangel_warnschwelle
+        name: Warnschwelle (Tage)
+        icon: mdi:alert-circle-outline
+  - type: grid
+    cards:
+    - type: heading
+      heading: Wasserhärte & Szenen
+      heading_style: title
+      icon: mdi:tune-vertical
+    - type: entities
+      show_header_toggle: false
+      entities:
+      - entity: sensor.judo_i_soft_pro_keller_wunschwasserharte
+        name: Wunsch-Wasserhärte
+        icon: mdi:water-opacity
+      - entity: number.judo_i_soft_pro_keller_wunschwasserharte
+        name: Aktuelle Wunsch-Wasserhärte
+        icon: mdi:water-check-outline
+      - entity: select.judo_i_soft_pro_keller_harteeinheit
+        name: Einheiten-Auswahl
+        icon: mdi:format-letter-case
+      - type: section
+      - entity: sensor.judo_i_soft_pro_keller_aktive_szene
+        name: Aktive Szene
+        icon: mdi:play-circle-outline
+      - entity: select.judo_i_soft_pro_keller_szenenauswahl
+        name: Szene auswählen
+        icon: mdi:palette-outline
+      - entity: select.judo_i_soft_pro_keller_szenendauer
+        name: Szenendauer
+        icon: mdi:timer-outline
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: tile
+        entity: button.judo_i_soft_pro_keller_szene_aktivieren
+        name: Szene starten
+        icon: mdi:play-circle
+        hide_state: true
+        features:
+        - type: button
+          action_name: Starten
+      - type: tile
+        entity: button.judo_i_soft_pro_keller_alltag_meistern
+        name: Alltag meistern
+        icon: mdi:home-water-outline
+        hide_state: true
+        features:
+        - type: button
+          action_name: Zurücksetzen
+      - type: tile
+        entity: button.judo_i_soft_pro_keller_regeneration_starten
+        name: Regeneration
+        icon: mdi:autorenew
+        hide_state: true
+        features:
+        - type: button
+          action_name: Starten
+    - type: heading
+      heading: Urlaubsmodus
+      heading_style: title
+      icon: mdi:beach
+    - type: entities
+      show_header_toggle: false
+      entities:
+      - entity: number.judo_i_soft_pro_keller_urlaubstage
+        name: Urlaubstage festlegen
+        icon: mdi:calendar-range
+    - type: tile
+      entity: button.judo_i_soft_pro_keller_urlaubsmodus_starten
+      name: Urlaubsmodus aktivieren
+      icon: mdi:beach
+      hide_state: true
+      features:
+      - type: button
+        action_name: Aktivieren
+      grid_options:
+        rows: 2
+        columns: 12
