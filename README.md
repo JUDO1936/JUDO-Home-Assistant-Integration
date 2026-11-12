@@ -60,7 +60,8 @@ manuelle Auswahl eines PRO-Profils für ein anderes Gerät.
 
 
 Unbekannte Gerätetypen werden bei der Einrichtung abgelehnt. Andere Familien,
-z. B. SOFTwell, ZEWA, i-dos oder i-fill, sind in dieser Version nicht enthalten.
+z. B. SOFTwell, ZEWA, i-dos oder i-fill, sind in dieser Version noch nicht enthalten,
+diese werden aber Zeitnah folgen.
 
 **Beispiel:** Ein i-soft K erhält Wasser-, Salz- und Härtewerte sowie
 Alarmaktionen. Er erhält keine Szenenauswahl und keine PRO-Urlaubstage.
