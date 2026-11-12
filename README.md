@@ -712,18 +712,3 @@ Tests im Projektverzeichnis starten; die Python-Umgebung benötigt `aiohttp`:
 python3 -m unittest discover -s tests -v
 ```
 
-| Version | Änderung |
-| --- | --- |
-| 3.0.0 | Familienprofile auf Basis der bisherigen PRO-Integration |
-| 3.0.1 | Allgemeiner Anzeigename und GitHub-Links |
-| 3.0.2 | Salzantwort akzeptiert wieder zusätzliche Bytes wie in der ursprünglichen Integration |
-| 4.0.0 | Neuer technischer Ordner, neue Domain und Entity-Präfixe ohne PRO; Dashboard-Referenzen angepasst |
-| 4.0.1 | Eigener Button zum Zurückstellen auf „Alltag meistern“; PRO-Dashboard ergänzt |
-| 4.0.2 | Ein- und zweibyte Antworten für Warnschwelle und maximale Entnahmedauer werden gelesen |
-| 4.0.3 | „Alltag meistern“ aus der Szenenauswahl entfernt; Dashboard-Anleitung und Projektstatus präzisiert |
-| 4.0.4 | Maintainer dieser Weiterentwicklung benannt |
-| 4.0.5 | GitHub-Supportzuordnung entfernt; Maintainer- und Lizenzhinweise überarbeitet |
-| 4.0.6 | Persönlichen Namen durch neutrale Nutzerbezeichnung ersetzt |
-
-Die Salzkorrektur ist in 4.0.0 enthalten. Beim Wechsel von 3.x auf 4.0.0 gilt
-die oben beschriebene Neueinrichtung; nicht nur zwei einzelne Dateien austauschen.
