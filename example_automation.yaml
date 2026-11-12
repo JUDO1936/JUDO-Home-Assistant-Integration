@@ -1,0 +1,14 @@
+alias: Meldung bei geschlossenem Leckageschutz
+description: Meldet, wenn der Leckageschutz von deiner JUDO Anlage schließt.
+triggers:
+  - trigger: state
+    entity_id: sensor.judo_i_soft_pro_leckageschutz_position_abgeleitet
+    to: "Geschlossen"
+conditions: []
+actions:
+  - action: persistent_notification.create
+    data:
+      title: Leckageschutz geschlossen
+      message: Der Leckageschutz von deiner JUDO Anlage ist geschlossen.
+      notification_id: judo_i_soft_pro_leckageschutz_geschlossen
+mode: single
