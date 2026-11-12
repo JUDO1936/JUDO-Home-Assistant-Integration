@@ -130,39 +130,7 @@ Repository-Name auf GitHub noch nicht existiert, verwende zunächst die manuelle
 Installation. Prüfe bei einem Wechsel, dass HACS nicht weiterhin die alte
 PRO-Version als Quelle für dieselbe Anlage verwaltet.
 
-## Wechsel von der bisherigen PRO-Integration
-
-Die bisherige Domain `judo_isoft_pro` und die neue Domain
-`judo_home_assistant_integration` sind für Home Assistant unterschiedliche
-Integrationen. **Eine automatische Übernahme alter Einträge ist nicht eingebaut.**
-
-1. Sichere die Home-Assistant-Konfiguration, deine Dashboard-YAMLs und die
-   Automationen, die bisherige JUDO-Entitäten verwenden.
-2. Notiere die IP-Adresse, den Port, den Gerätenamen und deine Zugangsdaten.
-3. Deaktiviere für die Dauer des Wechsels Automationen, die Aktionen an die
-   bisherige Anlage senden.
-4. Entferne die umzustellenden Geräte-/Konfigurationseinträge der bisherigen
-   Integration unter Einstellungen → Geräte & Dienste.
-5. Falls die alte Integration über HACS installiert wurde, entferne die alte
-   Installation dort, bevor du das neue Repository installierst.
-6. Sichere den bisherigen Ordner `/config/custom_components/judo_isoft_pro`
-   außerhalb von `custom_components`. Falls andere Anlagen absichtlich noch
-   die alte Integration verwenden, wird dieser Ordner weiterhin benötigt.
-7. Installiere den vollständigen neuen Ordner
-   `/config/custom_components/judo_home_assistant_integration`.
-8. Starte Home Assistant vollständig neu und füge die Anlagen neu hinzu.
-9. Ersetze die Entity-IDs in Dashboard, Skripten und Automationen durch die
-   tatsächlich erzeugten neuen IDs.
-10. Kontrolliere die Funktionen und aktiviere die angepassten Automationen wieder.
-
-Alte Geräte-, Entitäts- und Statistikreferenzen werden nicht automatisch
-umgeschrieben. Die neue Integration führt alte Verläufe nicht automatisch mit
-den neuen Entitäten zusammen. Das Entfernen alter Einträge kann deren
-Referenzen und Historienzuordnung beeinflussen; deshalb vorher sichern.
-
-Richte dieselbe Anlage während des normalen Betriebs nicht gleichzeitig in
-beiden Integrationen ein. Sonst fragen zwei unabhängige Clients dasselbe Gerät ab.
-
+#
 ## Einrichtung und mehrere Anlagen
 
 ### Beispiel für eine Anlage
