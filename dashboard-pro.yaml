@@ -2,7 +2,7 @@
 # VOR DEM IMPORT ANPASSEN:
 # 1. Einstellungen > Geräte & Dienste > JUDO > dein Gerät > Entitäten öffnen.
 # 2. Die vollständigen Entity-IDs deiner Anlage kopieren.
-# 3. Den Beispielpräfix judo_home_assistant_integration_192_168_1_50 unten durch
+# 3. Den Beispielpräfix judo_i_soft_PRO unten durch
 #    den Präfix deiner Anlage ersetzen. Beispiel-Port 8080: am Präfix steht dann
 #    zusätzlich _p8080.
 # Die Entity-IDs richten sich nach IP-Adresse/Hostname und Port, nicht nach dem
@@ -27,13 +27,13 @@ views:
     - type: entities
       show_header_toggle: false
       entities:
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_geratestatus
+      - entity: sensor.judo_i_soft_PRO_geratestatus
         name: Verbindungsstatus
         icon: mdi:lan-connect
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_geratetyp
+      - entity: sensor.judo_i_soft_PRO_geratetyp
         name: Modelltyp
         icon: mdi:chip
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_software_version
+      - entity: sensor.judo_i_soft_PRO_software_version
         name: Firmware-Version
         icon: mdi:numeric
     - type: heading
@@ -42,13 +42,13 @@ views:
       icon: mdi:chart-line
     - type: history-graph
       entities:
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_gesamtwassermenge
+      - entity: sensor.judo_i_soft_PRO_gesamtwassermenge
         name: Gesamtwasser
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_weichwassermenge
+      - entity: sensor.judo_i_soft_PRO_weichwassermenge
         name: Weichwasser
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_aktueller_wasserdurchfluss
+      - entity: sensor.judo_i_soft_PRO_aktueller_wasserdurchfluss
         name: Durchfluss
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_wassertemperatur
+      - entity: sensor.judo_i_soft_PRO_wassertemperatur
         name: Temperatur
       hours_to_show: 168
       show_names: true
@@ -63,17 +63,17 @@ views:
     - type: entities
       show_header_toggle: false
       entities:
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_gesamtwassermenge
+      - entity: sensor.judo_i_soft_PRO_gesamtwassermenge
         name: Gesamtwassermenge
         icon: mdi:water
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_weichwassermenge
+      - entity: sensor.judo_i_soft_PRO_weichwassermenge
         name: Weichwassermenge
         icon: mdi:water-outline
       - type: section
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_aktueller_wasserdurchfluss
+      - entity: sensor.judo_i_soft_PRO_wasserdurchfluss
         name: Aktueller Durchfluss
         icon: mdi:water-pump
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_wassertemperatur
+      - entity: sensor.judo_i_soft_PRO_wassertemperatur
         name: Wassertemperatur
         icon: mdi:thermometer-water
     - type: heading
@@ -83,23 +83,23 @@ views:
     - type: entities
       show_header_toggle: false
       entities:
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_globaler_leckageschutz
+      - entity: sensor.judo_i_soft_PRO_globaler_leckageschutz
         name: Leckageschutz-Status
         icon: mdi:shield-check
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_leckageschutz_position_abgeleitet
+      - entity: sensor.judo_i_soft_PRO_leckageschutz_position_abgeleitet
         name: Leckageschutz Ventil
         icon: mdi:valve
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_leckagegrund
+      - entity: sensor.judo_i_soft_PRO_leckagegrund
         name: Leckagegrund
         icon: mdi:alert-decagram-outline
       - type: section
-      - entity: select.judo_home_assistant_integration_192_168_1_50_max_entnahmedauer
+      - entity: select.judo_i_soft_PRO_entnahmedauer
         name: Max. Entnahmedauer
         icon: mdi:timer-cog
-      - entity: number.judo_home_assistant_integration_192_168_1_50_max_entnahmemenge
+      - entity: number.judo_i_soft_PRO_entnahmemenge
         name: Max. Entnahmemenge
         icon: mdi:water-minus
-      - entity: number.judo_home_assistant_integration_192_168_1_50_max_volumenstrom
+      - entity: number.judo_i_soft_PRO_volumenstrom
         name: Max. Volumenstrom
         icon: mdi:speedometer
     - type: grid
@@ -107,7 +107,7 @@ views:
       square: false
       cards:
       - type: tile
-        entity: button.judo_home_assistant_integration_192_168_1_50_leckageschutz_schliessen
+        entity: button.judo_i_soft_PRO_leckageschutz_schliessen
         name: Leckageschutz schließen
         icon: mdi:valve-closed
         hide_state: true
@@ -115,7 +115,7 @@ views:
         - type: button
           action_name: Schließen
       - type: tile
-        entity: button.judo_home_assistant_integration_192_168_1_50_leckageschutz_offnen
+        entity: button.judo_i_soft_PRO_leckageschutz_offnen
         name: Leckageschutz öffnen
         icon: mdi:valve-open
         hide_state: true
@@ -129,14 +129,14 @@ views:
     - type: entities
       show_header_toggle: false
       entities:
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_salzgewicht
+      - entity: sensor.judo_i_soft_PRO_salzgewicht
         name: Aktuelles Salzgewicht
         icon: mdi:sack
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_salzreichweite
+      - entity: sensor.judo_i_soft_PRO_salzreichweite
         name: Verbleibende Reichweite
         icon: mdi:calendar-clock
       - type: section
-      - entity: number.judo_home_assistant_integration_192_168_1_50_salzmangel_warnschwelle
+      - entity: number.judo_i_soft_PRO_salzmangel_warnschwelle
         name: Warnschwelle (Tage)
         icon: mdi:alert-circle-outline
   - type: grid
@@ -148,23 +148,23 @@ views:
     - type: entities
       show_header_toggle: false
       entities:
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_wunschwasserharte
+      - entity: sensor.judo_i_soft_PRO_wunschwasserharte
         name: Wunsch-Wasserhärte
         icon: mdi:water-opacity
-      - entity: number.judo_home_assistant_integration_192_168_1_50_wunschwasserharte
+      - entity: number.judo_i_soft_PRO_wunschwasserharte
         name: Aktuelle Wunsch-Wasserhärte
         icon: mdi:water-check-outline
-      - entity: select.judo_home_assistant_integration_192_168_1_50_harteeinheit
+      - entity: select.judo_i_soft_PRO_harteeinheit
         name: Einheiten-Auswahl
         icon: mdi:format-letter-case
       - type: section
-      - entity: sensor.judo_home_assistant_integration_192_168_1_50_aktive_szene
+      - entity: sensor.judo_i_soft_PRO_aktive_szene
         name: Aktive Szene
         icon: mdi:play-circle-outline
-      - entity: select.judo_home_assistant_integration_192_168_1_50_szenenauswahl
+      - entity: select.judo_i_soft_PRO_szenenauswahl
         name: Szene auswählen
         icon: mdi:palette-outline
-      - entity: select.judo_home_assistant_integration_192_168_1_50_szenendauer
+      - entity: select.judo_i_soft_PRO_szenendauer
         name: Szenendauer
         icon: mdi:timer-outline
     - type: grid
@@ -172,7 +172,7 @@ views:
       square: false
       cards:
       - type: tile
-        entity: button.judo_home_assistant_integration_192_168_1_50_szene_aktivieren
+        entity: button.judo_i_soft_PRO_szene_aktivieren
         name: Szene starten
         icon: mdi:play-circle
         hide_state: true
@@ -180,7 +180,7 @@ views:
         - type: button
           action_name: Starten
       - type: tile
-        entity: button.judo_home_assistant_integration_192_168_1_50_alltag_meistern
+        entity: button.judo_i_soft_PRO_alltag_meistern
         name: Alltag meistern
         icon: mdi:home-water-outline
         hide_state: true
@@ -188,7 +188,7 @@ views:
         - type: button
           action_name: Zurücksetzen
       - type: tile
-        entity: button.judo_home_assistant_integration_192_168_1_50_regeneration_starten
+        entity: button.judo_i_soft_PRO_regeneration_starten
         name: Regeneration
         icon: mdi:autorenew
         hide_state: true
@@ -202,11 +202,11 @@ views:
     - type: entities
       show_header_toggle: false
       entities:
-      - entity: number.judo_home_assistant_integration_192_168_1_50_urlaubstage
+      - entity: number.judo_i_soft_PRO_urlaubstage
         name: Urlaubstage festlegen
         icon: mdi:calendar-range
     - type: tile
-      entity: button.judo_home_assistant_integration_192_168_1_50_urlaubsmodus_starten
+      entity: button.judo_i_soft_PRO_urlaubsmodus_starten
       name: Urlaubsmodus aktivieren
       icon: mdi:beach
       hide_state: true
