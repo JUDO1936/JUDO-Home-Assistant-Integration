@@ -682,7 +682,7 @@ Der Integrationsordner selbst heißt `judo_home_assistant_integration`.
 | `hacs.json` | Repository-Metadaten für HACS | im Repository, nicht separat in den HA-Integrationsordner |
 | `tests/` | Simulierte Entwicklungstests | nein |
 | `README.md`, `LICENSE.md` | Dokumentation und Lizenz | nicht für den HA-Laufzeitbetrieb |
-| `example_automation` | Beispiel Automation für eine Meldung bei Geschlossenen Leckageschutz |
+| `example_automation` | Beispiel Automation für eine Meldung bei Geschlossenen Leckageschutz | nicht für den HA-Laufzeitbetrieb |
 
 Der allgemeine Name „JUDO Home Assistant Integration“ bedeutet nicht, dass alle
 JUDO-Produkte unterstützt werden. Maßgeblich bleibt die Gerätetabelle dieser Version.
