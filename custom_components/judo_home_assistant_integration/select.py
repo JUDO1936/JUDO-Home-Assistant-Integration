@@ -32,24 +32,51 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     coordinator: JudoCoordinator = hass.data[DOMAIN][entry.entry_id]
+
     entities = [
-            JudoSceneSelect(coordinator, entry),
-            JudoSceneDurationSelect(coordinator, entry),
-            JudoMaxDrawDurationSelect(coordinator, entry),
-            JudoHardnessUnitSelect(coordinator, entry),
+        JudoSceneSelect(coordinator, entry),
+        JudoSceneDurationSelect(coordinator, entry),
+        JudoMaxDrawDurationSelect(coordinator, entry),
+        JudoHardnessUnitSelect(coordinator, entry),
     ]
-    async_add_entities([entity for entity in entities if (not isinstance(entity, (JudoSceneSelect, JudoSceneDurationSelect)) or coordinator.profile.scenes) and (not isinstance(entity, JudoMaxDrawDurationSelect) or coordinator.profile.limits)])
+
+    async_add_entities(
+        [
+            entity
+            for entity in entities
+            if (
+                not isinstance(
+                    entity,
+                    (JudoSceneSelect, JudoSceneDurationSelect),
+                )
+                or coordinator.profile.scenes
+            )
+            and (
+                not isinstance(entity, JudoMaxDrawDurationSelect)
+                or coordinator.profile.limits
+            )
+        ]
+    )
 
 
 class JudoSelectBase(CoordinatorEntity[JudoCoordinator], SelectEntity):
     _attr_has_entity_name = True
 
-    def __init__(self, coordinator: JudoCoordinator, entry: ConfigEntry, *, unique_suffix: str, entity_key: str, name: str) -> None:
+    def __init__(
+        self,
+        coordinator: JudoCoordinator,
+        entry: ConfigEntry,
+        *,
+        unique_suffix: str,
+        entity_key: str,
+        name: str,
+    ) -> None:
         super().__init__(coordinator)
         self._attr_name = name
         self._attr_unique_id = f"{DOMAIN}_{unique_suffix}_{entry.entry_id}"
         self._attr_default_entity_id = (
-            f"select.{entity_prefix(coordinator.api.host, coordinator.api.port)}_{entity_key}"
+            f"select.{entity_prefix(coordinator.api.host, coordinator.api.port)}"
+            f"_{entity_key}"
         )
         self._attr_device_info = {
             "identifiers": {(DOMAIN, entry.entry_id)},
@@ -69,7 +96,8 @@ class JudoSceneSelect(JudoSelectBase):
 
     def __init__(self, coordinator, entry) -> None:
         super().__init__(
-            coordinator, entry,
+            coordinator,
+            entry,
             unique_suffix="scene_select",
             entity_key="szenenauswahl",
             name="Szenenauswahl",
@@ -84,7 +112,8 @@ class JudoSceneSelect(JudoSelectBase):
 
     async def async_select_option(self, option: str) -> None:
         self.coordinator.set_scene_selection(
-            SCENE_NAME_TO_CODE[option], self.coordinator.selected_scene_duration
+            SCENE_NAME_TO_CODE[option],
+            self.coordinator.selected_scene_duration,
         )
         self.async_write_ha_state()
 
@@ -95,7 +124,8 @@ class JudoSceneDurationSelect(JudoSelectBase):
 
     def __init__(self, coordinator, entry) -> None:
         super().__init__(
-            coordinator, entry,
+            coordinator,
+            entry,
             unique_suffix="scene_duration",
             entity_key="szenendauer",
             name="Szenendauer",
@@ -110,7 +140,8 @@ class JudoSceneDurationSelect(JudoSelectBase):
 
     async def async_select_option(self, option: str) -> None:
         self.coordinator.set_scene_selection(
-            self.coordinator.selected_scene, SCENE_DURATION_NAME_TO_CODE[option]
+            self.coordinator.selected_scene,
+            SCENE_DURATION_NAME_TO_CODE[option],
         )
         self.async_write_ha_state()
 
@@ -123,7 +154,8 @@ class JudoMaxDrawDurationSelect(JudoSelectBase):
 
     def __init__(self, coordinator, entry) -> None:
         super().__init__(
-            coordinator, entry,
+            coordinator,
+            entry,
             unique_suffix="max_draw_duration",
             entity_key="max_entnahmedauer",
             name="Max. Entnahmedauer",
@@ -149,23 +181,18 @@ class JudoMaxDrawDurationSelect(JudoSelectBase):
 
     async def async_select_option(self, option: str) -> None:
         minutes = MAX_DRAW_DURATION_NAME_TO_VALUE.get(option)
+
         if minutes is None and option.endswith(" min"):
             try:
                 minutes = int(option[:-4])
             except ValueError:
                 minutes = None
+
         if minutes is None or not 0 <= minutes <= 255:
             raise ValueError("Ungültige maximale Entnahmedauer")
-        if minutes <= 255:
-            data_hex = f"{minutes:02X}"
-        else:
-            # Keep the requested UI steps available. The current supplied JUDO
-            # documentation describes command 3E as one byte (1-255 min), so
-            # values above 255 are not sent with an invented encoding.
-            raise ValueError(
-                f"{minutes} min ist in der aktuellen JUDO-REST-Dokumentation "
-                "für Kommando 3E nicht als gültiger 1-Byte-Wert dokumentiert."
-            )
+
+        data_hex = f"{minutes:02X}"
+
         await self.coordinator.async_write_command(
             CMD_MAX_DRAW_TIME,
             data_hex,
@@ -180,27 +207,42 @@ class JudoHardnessUnitSelect(JudoSelectBase):
 
     def __init__(self, coordinator, entry) -> None:
         super().__init__(
-            coordinator, entry,
+            coordinator,
+            entry,
             unique_suffix="hardness_unit",
             entity_key="harteeinheit",
             name="Härteeinheit",
         )
-        self._attr_options = [HARDNESS_UNIT_OPTIONS[code] for code in coordinator.profile.hardness_units]
+
+        # Nur Einheiten anbieten, die für das Modell vorgesehen sind
+        # und noch in HARDNESS_UNIT_OPTIONS enthalten sind.
+        self._attr_options = [
+            HARDNESS_UNIT_OPTIONS[code]
+            for code in coordinator.profile.hardness_units
+            if code in HARDNESS_UNIT_OPTIONS
+        ]
 
     @property
     def current_option(self) -> str:
         raw = self.coordinator.value(CMD_HARDNESS_UNIT_READ)
         if raw:
             try:
-                return HARDNESS_UNIT_OPTIONS.get(str(int(raw[:2], 16)), "°dH")
+                return HARDNESS_UNIT_OPTIONS.get(
+                    str(int(raw[:2], 16)),
+                    "°dH",
+                )
             except ValueError:
                 pass
         return "°dH"
 
     async def async_select_option(self, option: str) -> None:
         code = HARDNESS_UNIT_NAME_TO_CODE[option]
+
         if code not in self.coordinator.profile.hardness_units:
-            raise ValueError("Härteeinheit wird von diesem Modell nicht unterstützt")
+            raise ValueError(
+                "Härteeinheit wird von diesem Modell nicht unterstützt"
+            )
+
         await self.coordinator.async_write_command(
             CMD_HARDNESS_UNIT_WRITE,
             f"{int(code):02X}",
