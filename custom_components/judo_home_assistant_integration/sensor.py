@@ -17,10 +17,8 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import (
     CMD_6900_READ,
     CMD_DEVICE_TYPE,
-    CMD_DEVICE_NUMBER,
     CMD_HARDNESS,
     CMD_HARDNESS_UNIT_READ,
-    CMD_OPERATING_HOURS,
     CMD_SALT,
     CMD_SOFTWARE_VERSION,
     CMD_SOFTENED_WATER,
@@ -48,25 +46,52 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     coordinator: JudoCoordinator = hass.data[DOMAIN][entry.entry_id]
+
     entities = [
-            JudoWaterSensor(coordinator, entry, "Gesamtwassermenge", CMD_TOTAL_WATER, "28_m3", "gesamtwassermenge"),
-            JudoWaterSensor(coordinator, entry, "Weichwassermenge", CMD_SOFTENED_WATER, "29_m3", "weichwassermenge"),
-            JudoSaltWeightSensor(coordinator, entry),
-            JudoSaltRangeSensor(coordinator, entry),
-            JudoHardnessSensor(coordinator, entry),
-            JudoSoftwareVersionSensor(coordinator, entry),
-            JudoDeviceTypeSensor(coordinator, entry),
-            JudoDeviceIdSensor(coordinator, entry),
-            JudoOperatingHoursSensor(coordinator, entry),
-            JudoDeviceStatusSensor(coordinator, entry),
-            JudoActiveSceneSensor(coordinator, entry),
-            JudoLeakageStatusSensor(coordinator, entry),
-            JudoLeakagePositionSensor(coordinator, entry),
-            JudoLeakageReasonSensor(coordinator, entry),
-            JudoCurrentWaterFlowSensor(coordinator, entry),
-            JudoWaterTemperatureSensor(coordinator, entry),
+        JudoWaterSensor(
+            coordinator,
+            entry,
+            "Gesamtwassermenge",
+            CMD_TOTAL_WATER,
+            "28_m3",
+            "gesamtwassermenge",
+        ),
+        JudoWaterSensor(
+            coordinator,
+            entry,
+            "Weichwassermenge",
+            CMD_SOFTENED_WATER,
+            "29_m3",
+            "weichwassermenge",
+        ),
+        JudoSaltWeightSensor(coordinator, entry),
+        JudoSaltRangeSensor(coordinator, entry),
+        JudoHardnessSensor(coordinator, entry),
+        JudoSoftwareVersionSensor(coordinator, entry),
+        JudoDeviceTypeSensor(coordinator, entry),
+        JudoDeviceStatusSensor(coordinator, entry),
+        JudoActiveSceneSensor(coordinator, entry),
+        JudoLeakageStatusSensor(coordinator, entry),
+        JudoLeakagePositionSensor(coordinator, entry),
+        JudoLeakageReasonSensor(coordinator, entry),
+        JudoCurrentWaterFlowSensor(coordinator, entry),
+        JudoWaterTemperatureSensor(coordinator, entry),
     ]
-    async_add_entities([entity for entity in entities if (not isinstance(entity, Judo6900Entity) or coordinator.profile.live_status) and (not isinstance(entity, JudoActiveSceneSensor) or coordinator.profile.scenes)])
+
+    async_add_entities(
+        [
+            entity
+            for entity in entities
+            if (
+                not isinstance(entity, Judo6900Entity)
+                or coordinator.profile.live_status
+            )
+            and (
+                not isinstance(entity, JudoActiveSceneSensor)
+                or coordinator.profile.scenes
+            )
+        ]
+    )
 
 
 class JudoEntity(CoordinatorEntity[JudoCoordinator], SensorEntity):
@@ -87,7 +112,8 @@ class JudoEntity(CoordinatorEntity[JudoCoordinator], SensorEntity):
         self._attr_name = name
         self._attr_unique_id = f"{DOMAIN}_{unique_suffix}_{entry.entry_id}"
         self._attr_default_entity_id = (
-            f"sensor.{entity_prefix(coordinator.api.host, coordinator.api.port)}_{entity_key}"
+            f"sensor.{entity_prefix(coordinator.api.host, coordinator.api.port)}"
+            f"_{entity_key}"
         )
         self._attr_device_info = {
             "identifiers": {(DOMAIN, entry.entry_id)},
@@ -116,7 +142,15 @@ class JudoWaterSensor(JudoEntity):
     _attr_suggested_display_precision = 3
     _attr_icon = "mdi:water"
 
-    def __init__(self, coordinator, entry, name, command, unique_suffix, entity_key) -> None:
+    def __init__(
+        self,
+        coordinator,
+        entry,
+        name,
+        command,
+        unique_suffix,
+        entity_key,
+    ) -> None:
         super().__init__(
             coordinator,
             entry,
@@ -155,7 +189,10 @@ class JudoSaltWeightSensor(JudoEntity):
 
     @property
     def native_value(self) -> float | None:
-        salt = decode_salt(self.coordinator.value(CMD_SALT), self.coordinator.profile)
+        salt = decode_salt(
+            self.coordinator.value(CMD_SALT),
+            self.coordinator.profile,
+        )
         return round(salt[0] / 1000.0, 2) if salt is not None else None
 
 
@@ -175,7 +212,10 @@ class JudoSaltRangeSensor(JudoEntity):
 
     @property
     def native_value(self) -> int | None:
-        salt = decode_salt(self.coordinator.value(CMD_SALT), self.coordinator.profile)
+        salt = decode_salt(
+            self.coordinator.value(CMD_SALT),
+            self.coordinator.profile,
+        )
         return salt[1] if salt is not None else None
 
 
@@ -268,64 +308,6 @@ class JudoDeviceTypeSensor(JudoEntity):
         return {"hex": raw}
 
 
-class JudoDeviceIdSensor(JudoEntity):
-    """JUDO device ID / device number from command 06."""
-
-    _attr_icon = "mdi:identifier"
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
-
-    def __init__(self, coordinator, entry) -> None:
-        super().__init__(
-            coordinator,
-            entry,
-            unique_suffix="device_id",
-            entity_key="device_id",
-            name="Device ID",
-        )
-
-    @property
-    def native_value(self) -> int | None:
-        raw = self.coordinator.value(CMD_DEVICE_NUMBER)
-        if not raw or len(raw) < 8:
-            return None
-        try:
-            return int.from_bytes(bytes.fromhex(raw[:8]), "little")
-        except ValueError:
-            return None
-
-
-class JudoOperatingHoursSensor(JudoEntity):
-    _attr_native_unit_of_measurement = "h"
-    _attr_state_class = SensorStateClass.TOTAL_INCREASING
-    _attr_icon = "mdi:clock-outline"
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
-
-    def __init__(self, coordinator, entry) -> None:
-        super().__init__(
-            coordinator,
-            entry,
-            unique_suffix="operating_hours",
-            entity_key="betriebsstunden",
-            name="Betriebsstunden",
-        )
-
-    @property
-    def native_value(self) -> float | None:
-        raw = self.coordinator.value(CMD_OPERATING_HOURS)
-        if not raw or len(raw) < 8:
-            return None
-        try:
-            b = bytes.fromhex(raw[:8])
-            minutes = b[0]
-            hours = b[1]
-            days = int.from_bytes(b[2:4], "little")
-        except (ValueError, IndexError):
-            return None
-        return round(days * 24 + hours + minutes / 60.0, 2)
-
-
-
-
 class JudoDeviceStatusSensor(JudoEntity):
     """Connection status based on any successful device response in 5 minutes."""
 
@@ -334,8 +316,11 @@ class JudoDeviceStatusSensor(JudoEntity):
 
     def __init__(self, coordinator, entry) -> None:
         super().__init__(
-            coordinator, entry, unique_suffix="device_status",
-            entity_key="geratestatus", name="Gerätestatus",
+            coordinator,
+            entry,
+            unique_suffix="device_status",
+            entity_key="geratestatus",
+            name="Gerätestatus",
         )
 
     @property
@@ -352,6 +337,7 @@ class JudoDeviceStatusSensor(JudoEntity):
             "letzte_antwort": self.coordinator.last_success,
             "online_timeout_minuten": 5,
         }
+
 
 class Judo6900Entity(JudoEntity):
     """Common base for the user-requested values from the single 6900 read."""
@@ -416,7 +402,9 @@ class JudoLeakageStatusSensor(Judo6900Entity):
             return {}
         return {
             "global_status_hex": f"0x{status.leakage_status:02X}",
-            "aktive_globalfunktionen": leakage_status_details(status.leakage_status),
+            "aktive_globalfunktionen": leakage_status_details(
+                status.leakage_status
+            ),
             "szenen_leckageschutz": bool(status.active_scene_options & 0x01),
             "leckagegrund_hex": f"0x{status.leakage_reason:02X}",
         }
@@ -450,7 +438,10 @@ class JudoLeakagePositionSensor(Judo6900Entity):
             return {}
         return {
             "leckagegrund_hex": f"0x{status.leakage_reason:02X}",
-            "position_logik": "Geöffnet bei Leckagegrund 0x00, Geschlossen bei jedem gesetzten Leckagegrund-Bit",
+            "position_logik": (
+                "Geöffnet bei Leckagegrund 0x00, Geschlossen bei jedem "
+                "gesetzten Leckagegrund-Bit"
+            ),
         }
 
 
