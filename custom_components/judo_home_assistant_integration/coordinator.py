@@ -58,6 +58,7 @@ class JudoCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         """Start the dedicated 6900 polling timer after initial setup succeeds."""
         if not self.profile or not self.profile.live_status or self._poll_6900_unsub:
             return
+
         from homeassistant.helpers.event import async_track_time_interval
 
         self._poll_6900_unsub = async_track_time_interval(
@@ -117,11 +118,23 @@ class JudoCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             data = bytes.fromhex(raw)
         except ValueError as err:
             raise JudoApiError(f"Ungültige Hex-Antwort für {command}") from err
+
         widths = {
-            "FF": 1, "06": 4, "01": 3, "51": 2, "23": 1,
-            "56": self.profile.salt_weight_bytes + 2, "57": 1,
-            "3E": 1, "3F": 2, "40": 2, "28": 4, "29": 4, "25": 4,
+            "FF": 1,
+            "06": 4,
+            "01": 3,
+            "51": 2,
+            "23": 1,
+            "56": self.profile.salt_weight_bytes + 2,
+            "57": 1,
+            "3E": 1,
+            "3F": 2,
+            "40": 2,
+            "28": 4,
+            "29": 4,
+            "25": 4,
         }
+
         # Some supplied PRO examples omit the unused tail of command 69.
         if command == CMD_6900_READ:
             valid = len(data) >= 12
@@ -134,15 +147,21 @@ class JudoCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             valid = len(data) in (1, 2)
         else:
             valid = len(data) == widths[command]
+
         if not valid:
             raise JudoApiError(f"Ungültige Antwortlänge für {command}: {len(data)}")
+
         if command == "FF":
             try:
                 same_profile = profile_from_hex(raw) == self.profile
             except ValueError:
                 same_profile = False
+
             if not same_profile:
-                raise JudoApiError("Gerätetyp hat sich geändert; Anlage neu einrichten")
+                raise JudoApiError(
+                    "Gerätetyp hat sich geändert; Anlage neu einrichten"
+                )
+
         return raw
 
     async def _record_success(self, command: str, raw: str) -> None:
@@ -157,15 +176,16 @@ class JudoCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         """Poll the live 6900 status and publish the updated state."""
         if not self.profile or not self.profile.live_status:
             return
+
         try:
             raw = await self._read_command(CMD_6900_READ)
         except JudoApiError as err:
             self._errors[CMD_6900_READ] = str(err)
-            self.async_set_updated_data(self._build_data())
+            self._publish_cached_data()
             return
 
         await self._record_success(CMD_6900_READ, raw)
-        self.async_set_updated_data(self._build_data())
+        self._publish_cached_data()
 
     async def _async_poll_6900_timer(self, _now: datetime) -> None:
         await self.async_poll_6900()
@@ -179,7 +199,9 @@ class JudoCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 self.profile = profile_from_hex(raw_type)
                 await self._record_success("FF", raw_type)
             except (JudoApiError, ValueError) as err:
-                raise UpdateFailed("i-soft-Gerätetyp konnte nicht erkannt werden") from err
+                raise UpdateFailed(
+                    "i-soft-Gerätetyp konnte nicht erkannt werden"
+                ) from err
 
         successful = 0
         for command in self.profile.read_commands:
@@ -191,6 +213,7 @@ class JudoCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     and now - last_attempt < SOFTWARE_VERSION_POLL_INTERVAL
                 ):
                     continue
+
                 # Track attempts, including failed reads, so a failing version
                 # endpoint does not get queried on every regular poll cycle.
                 self._last_software_version_poll_attempt = now
@@ -226,7 +249,10 @@ class JudoCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     ) -> None:
         """Send a write through the same serialized command queue."""
         if not self.profile or command not in self.profile.write_commands:
-            raise JudoApiError(f"Kommando {command} wird für dieses Modell nicht angeboten")
+            raise JudoApiError(
+                f"Kommando {command} wird für dieses Modell nicht angeboten"
+            )
+
         try:
             await self.api.write(command, data_hex)
             timestamp = datetime.now(timezone.utc)
@@ -238,21 +264,25 @@ class JudoCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             self._errors[command] = str(err)
             raise
 
-        self.schedule_recheck(recheck_command or (
-            command if command in RECHECKABLE_COMMANDS else None
-        ))
+        self.schedule_recheck(
+            recheck_command
+            or (command if command in RECHECKABLE_COMMANDS else None)
+        )
 
     def schedule_recheck(self, command: str | None) -> None:
         if not command or not self.profile:
             return
+
         if command == CMD_6900_READ:
             if not self.profile.live_status:
                 return
         elif command not in self.profile.read_commands:
             return
+
         existing = self._recheck_tasks.get(command)
         if existing and not existing.done():
             return
+
         self._recheck_tasks[command] = self.hass.async_create_task(
             self._delayed_recheck(command)
         )
@@ -265,10 +295,19 @@ class JudoCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             except JudoApiError as err:
                 self._errors[command] = str(err)
                 return
+
             await self._record_success(command, raw)
-            self.async_set_updated_data(self._build_data())
+            self._publish_cached_data()
         finally:
             self._recheck_tasks.pop(command, None)
+
+    def _publish_cached_data(self) -> None:
+        """Publish cached values without resetting the regular polling timer."""
+        # async_set_updated_data() would restart the regular polling timer.
+        # Updating data and notifying listeners directly preserves that timer.
+        # The success state of the regular polling cycle is also preserved.
+        self.data = self._build_data()
+        self.async_update_listeners()
 
     def _build_data(self) -> dict[str, Any]:
         return {
