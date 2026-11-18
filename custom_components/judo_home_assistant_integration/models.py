@@ -2,6 +2,7 @@
 
 Keep this module independent of Home Assistant so protocol rules are testable.
 """
+
 from dataclasses import dataclass
 
 
@@ -31,11 +32,15 @@ class DeviceProfile:
 
     @property
     def hardness_units(self) -> tuple[str, ...]:
-        return ("0", "2", "4", "5") if self.family == "xl" else tuple(str(i) for i in range(7))
+        return (
+            ("0", "2", "4", "5")
+            if self.family == "xl"
+            else tuple(str(i) for i in range(7))
+        )
 
     @property
     def read_commands(self) -> tuple[str, ...]:
-        common = ("FF", "06", "01", "51", "23", "56", "57", "28", "29", "25")
+        common = ("FF", "01", "51", "23", "56", "57", "28", "29")
         return common + (("3E", "3F", "40") if self.limits else ())
 
     @property
@@ -70,13 +75,22 @@ def profile_from_hex(raw: str) -> DeviceProfile:
     return DEVICE_PROFILES[data[0]]
 
 
-def decode_salt(raw: str | None, profile: DeviceProfile) -> tuple[int, int] | None:
+def decode_salt(
+    raw: str | None,
+    profile: DeviceProfile,
+) -> tuple[int, int] | None:
     try:
         data = bytes.fromhex(raw or "")
     except ValueError:
         return None
+
     width = profile.salt_weight_bytes
+
     # Match the original integration: ignore trailing firmware fields.
     if len(data) < width + 2:
         return None
-    return int.from_bytes(data[:width], "little"), int.from_bytes(data[width:width + 2], "little")
+
+    return (
+        int.from_bytes(data[:width], "little"),
+        int.from_bytes(data[width:width + 2], "little"),
+    )
