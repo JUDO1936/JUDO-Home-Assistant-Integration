@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 from datetime import timedelta
 
+from .models import DEVICE_PROFILES
+
 DOMAIN = "judo_home_assistant_integration"
 INTEGRATION_NAME = "JUDO Home Assistant Integration"
 
@@ -61,7 +63,10 @@ CMD_TOTAL_WATER = "28"
 CMD_SOFTENED_WATER = "29"
 
 CMD_DEVICE_TYPE = "FF"
+
+# Wird bei der Einrichtung intern zur eindeutigen Zuordnung verwendet.
 CMD_DEVICE_NUMBER = "06"
+
 CMD_SOFTWARE_VERSION = "01"
 CMD_OPERATING_HOURS = "25"
 
@@ -76,7 +81,6 @@ CMD_6900_READ = "6900"
 # Pro Gerät wird maximal ein Kommando pro Sekunde gestartet.
 POLL_COMMANDS = (
     CMD_DEVICE_TYPE,
-    CMD_DEVICE_NUMBER,
     CMD_SOFTWARE_VERSION,
     CMD_HARDNESS,
     CMD_HARDNESS_UNIT_READ,
@@ -87,7 +91,6 @@ POLL_COMMANDS = (
     CMD_MAX_FLOW,
     CMD_TOTAL_WATER,
     CMD_SOFTENED_WATER,
-    CMD_OPERATING_HOURS,
 )
 
 
@@ -108,15 +111,10 @@ RECHECKABLE_COMMANDS = frozenset(
 # JUDO Gerätetypen
 # ---------------------------------------------------------------------------
 
-# Werte aus der JUDO REST-API-Dokumentation:
-#
-# 0x58 = i-soft PRO
-# 0x4B = i-soft PRO
-# 0x4C = i-soft PRO L
-
-from .models import DEVICE_PROFILES
-
-DEVICE_TYPES = {code: profile.name for code, profile in DEVICE_PROFILES.items()}
+DEVICE_TYPES = {
+    code: profile.name
+    for code, profile in DEVICE_PROFILES.items()
+}
 
 
 # ---------------------------------------------------------------------------
@@ -149,10 +147,12 @@ SCENE_OPTIONS = {
     "A": "Custom Szene 3",
 }
 
-# Alltag meistern wird über den eigenen Rückkehr-Button aktiviert. Urlaub
-# genießen wird über den separaten Urlaubsmodus bedient.
+# Alltag meistern wird über den eigenen Rückkehr-Button aktiviert.
+# Urlaub genießen wird über den separaten Urlaubsmodus bedient.
 SCENE_SELECT_OPTIONS = {
-    code: name for code, name in SCENE_OPTIONS.items() if code not in {"0", "3"}
+    code: name
+    for code, name in SCENE_OPTIONS.items()
+    if code not in {"0", "3"}
 }
 
 
@@ -171,12 +171,10 @@ SCENE_DURATION_OPTIONS = {
     "FFFF": "Unbegrenzt",
 }
 
-
 SCENE_NAME_TO_CODE = {
     name: code
     for code, name in SCENE_SELECT_OPTIONS.items()
 }
-
 
 SCENE_DURATION_NAME_TO_CODE = {
     name: code
@@ -184,15 +182,35 @@ SCENE_DURATION_NAME_TO_CODE = {
 }
 
 
-# UI steps for maximum continuous draw duration.
+# ---------------------------------------------------------------------------
+# Maximale Entnahmedauer
+# ---------------------------------------------------------------------------
+
 # Command 3E is documented as one byte: 1-255 minutes.
 MAX_DRAW_DURATION_OPTIONS = (
-    10, 20, 30, 40, 50, 60, 70, 80, 90, 120, 150, 180, 210, 240, 255,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    120,
+    150,
+    180,
+    210,
+    240,
+    255,
 )
 
 MAX_DRAW_DURATION_NAME_TO_VALUE = {
     "Deaktiviert": 0,
-    **{f"{minutes} min": minutes for minutes in MAX_DRAW_DURATION_OPTIONS},
+    **{
+        f"{minutes} min": minutes
+        for minutes in MAX_DRAW_DURATION_OPTIONS
+    },
 }
 
 HARDNESS_UNIT_NAME_TO_CODE = {
@@ -215,7 +233,6 @@ LEAKAGE_STATUS_BITS = {
     0x20: "Externe Sensoren",
 }
 
-
 # Byte 3 der 6900-Antwort.
 LEAKAGE_REASON_BITS = {
     0x01: "Volumenstrom überschritten",
@@ -235,7 +252,6 @@ LEAKAGE_REASON_BITS = {
 
 def entity_prefix(host: str, port: int) -> str:
     """Create a stable entity-id prefix from the configured endpoint."""
-
     slug = re.sub(
         r"[^a-z0-9]+",
         "_",
